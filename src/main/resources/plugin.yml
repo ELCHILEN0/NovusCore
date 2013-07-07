@@ -1,0 +1,6 @@
+name: NovusCore
+version: ${project.version}
+description: ${project.description}
+website: ${project.url}
+author: ELCHILEN0
+main: com.TeamNovus.NovusCore.NovusCore

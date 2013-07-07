@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.TeamNovus.NovusCore</groupId>
+	<artifactId>NovusCore</artifactId>
+	<version>1.2.0</version>
+	<name>NovusCore</name>
+	<url>http://novuscraft.org</url>
+	<description>A collection of various essential features for the NovusCraft server.</description>
+
+	<repositories>
+		<!-- Bukkit -->
+		<repository>
+			<id>bukkit</id>
+			<name>Bukkit</name>
+			<url>http://repo.bukkit.org/content/groups/public/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!-- Bukkit -->
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>1.6.1-R0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+</project>

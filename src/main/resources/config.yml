@@ -1,0 +1,32 @@
+motd:
+  enabled: true
+  allow-color: true
+  messages:
+  - 'Welcome to NovusCraft!'
+hat:
+  restricted-blocks: []
+rank:
+  silent: false
+garbage:
+  world:
+    unload-chunks: true
+    ignored-entities:
+      - VILLAGER
+      - OCELOT
+      - WOLF
+      - COW
+      - SHEEP
+      - HORSE
+      - UNKNOWN
+   world_creative:
+     unload-chunks: true
+     ignored-entities: []
+   world_meridia:
+     unload-chunks: false
+     ignored-entities: []
+   world_minigames:
+     unload-chunks: true
+     ignored-entities: []
+dispenser:
+  enabled-worlds:
+    - world_meridia
