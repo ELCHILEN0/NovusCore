@@ -3,8 +3,10 @@ package com.TeamNovus.NovusCore.Commands;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
@@ -14,13 +16,15 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 
 import com.TeamNovus.NovusCore.NovusCore;
+import com.TeamNovus.NovusCore.Commands.CommandTypes.AbstractCommand;
+import com.TeamNovus.NovusCore.Commands.CommandTypes.Category;
 
 public class Commands {
-	private static LinkedList<Command> commands = new LinkedList<Command>();
+	private static List<AbstractCommand> commands = new ArrayList<AbstractCommand>();
 	private static CommandExecutor commandExecutor = new CommandExecutor();
 	private static Plugin plugin = NovusCore.plugin;
 	
-	public static void register(Command command) {
+	public static void register(AbstractCommand command) {
 		commands.add(command);
 		
 		if(command.getParent() == null) {
@@ -33,41 +37,40 @@ public class Commands {
 		}
 	}
 
-	public static Command getCommand(String... labels) {
-		Command lastCommand = null;
+	public static AbstractCommand getCommand(String... labels) {
+		AbstractCommand lastCommand = null;
 
 		for (int i = 0; i < labels.length; i++) {
 			String label = labels[i];
-			boolean changed = false;
+			AbstractCommand nextCommand = null;
 			
 			if(i == 0) {
 				// If we are on a base level then iterate through every command that does not have a parent.
-				for(Command command : commands) {
+				for(AbstractCommand command : commands) {
 					if(!(command.hasParentCommand())) {
-						if(ArrayUtils.contains(command.getAliases(), label)) {
-							if(!(command.hasSubCommand())) {
-								return command;
-							} else {
-								lastCommand = command;
-								changed = true;
-							}
+						if(Arrays.asList(command.getAliases()).contains(label)) {
+							nextCommand = command;
 						}
 					}
 				}
 			} else {
 				// Otherwise iterate through every command that is a child of lastCommand.
-				for(Command command : commands) {
-					if(command.hasParentCommand() && command.isSubCommand(lastCommand)) {
-						if(ArrayUtils.contains(command.getAliases(), label)) {
-							lastCommand = command;
-							changed = true;
-						}
+				for(AbstractCommand command : lastCommand.getSubCommands()) {
+					if(ArrayUtils.contains(command.getAliases(), label)) {
+						nextCommand = command;
 					}
 				}
 			}	
-
-			// If no command was found through the iterations.
-			if(!(changed)) {
+			
+			// If no command was found then move on.
+			if(nextCommand == null) {
+				break;
+			}
+			
+			lastCommand = nextCommand;
+			
+			// If there are no further subcommands.
+			if(!(nextCommand.hasSubCommand())) {
 				break;
 			}
 		}
@@ -123,7 +126,7 @@ public class Commands {
 		return command;
 	}
 	
-	public static LinkedList<Command> getCommands() {
+	public static List<AbstractCommand> getCommands() {
 		return commands;
 	}
 

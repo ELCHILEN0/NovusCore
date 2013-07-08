@@ -1,16 +1,16 @@
-package com.TeamNovus.NovusCore.Commands;
+package com.TeamNovus.NovusCore.Commands.CommandTypes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-public abstract class Command {
-	private Command 	parent;
+import com.TeamNovus.NovusCore.Commands.Commands;
+
+public abstract class AbstractCommand {
+	private AbstractCommand 	parent;
 	private String[] 	aliases;
 	private String		description;
-	private String 		usage;
-	private String		usageMessage;
 	private String 		permission;
 	private String		permissionMessage;
 	private boolean		allowPlayer = true;
@@ -18,7 +18,7 @@ public abstract class Command {
 	private String		playerDisallowedMessage;
 	private String		consoleDisallowedMessage;
 	
-	public Command(Command parent, String... aliases) throws InstantiationException {
+	public AbstractCommand(AbstractCommand parent, String... aliases) throws InstantiationException {
 		this.parent = parent;
 		
 		if (aliases.length == 0) {
@@ -34,11 +34,11 @@ public abstract class Command {
 		this.aliases = aliases;
 	}
 	
-	public Command(String... aliases) throws InstantiationException {
+	public AbstractCommand(String... aliases) throws InstantiationException {
 		this(null, aliases);
 	}
 	
-	public Command getParent() {
+	public AbstractCommand getParent() {
 		return parent;
 	}
 	
@@ -50,54 +50,8 @@ public abstract class Command {
 		return description;
 	}
 	
-	protected Command setDescription(String description) {
+	protected AbstractCommand setDescription(String description) {
 		this.description = description;
-		
-		return this;
-	}
-	
-	public String getUsage() {
-		return usage;
-	}
-	
-	protected Command setUsage(String usage) {
-		this.usage = usage;
-		
-		return this;
-	}
-	
-	public int getMinArgs() {
-		String[] args = usage.split(" ");
-		
-		int count = 0;
-		
-		for (String arg : args) {
-			if(arg.startsWith("<") && arg.endsWith(">")) 
-				count++;
-		}
-		
-		return count;
-	}
-	
-	public int getMaxArgs() {
-		String[] args = usage.split(" ");
-		
-		int count = 0;
-		
-		for (String arg : args) {
-			if((arg.startsWith("<") && arg.endsWith(">")) || (arg.startsWith("[") && arg.endsWith("]"))) 
-				count++;
-		}
-		
-		return count;
-	}
-	
-	public String getUsageMessage() {
-		return usageMessage;
-	}
-	
-	protected Command setUsageMessage(String usageMessage) {
-		this.usageMessage = usageMessage;
 		
 		return this;
 	}
@@ -106,7 +60,7 @@ public abstract class Command {
 		return permission;
 	}
 	
-	protected Command setPermission(String permission) {
+	protected AbstractCommand setPermission(String permission) {
 		this.permission = permission;
 		
 		return this;
@@ -116,7 +70,7 @@ public abstract class Command {
 		return permissionMessage;
 	}
 
-	protected Command setPermissionMessage(String permissionMessage) {
+	protected AbstractCommand setPermissionMessage(String permissionMessage) {
 		this.permissionMessage = permissionMessage;
 		
 		return this;
@@ -130,7 +84,7 @@ public abstract class Command {
 		return !(allowPlayer);
 	}
 	
-	protected Command setAllowPlayer(boolean allowPlayer) {
+	protected AbstractCommand setAllowPlayer(boolean allowPlayer) {
 		this.allowPlayer = allowPlayer;
 		
 		return this;
@@ -140,7 +94,7 @@ public abstract class Command {
 		return playerDisallowedMessage;
 	}
 	
-	protected Command setPlayerDisallowedMessage(String playerDisallowedMessage) {
+	protected AbstractCommand setPlayerDisallowedMessage(String playerDisallowedMessage) {
 		this.playerDisallowedMessage = playerDisallowedMessage;
 		
 		return this;
@@ -154,7 +108,7 @@ public abstract class Command {
 		return !(allowConsole);
 	}	
 	
-	protected Command setAllowConsole(boolean allowConsole) {
+	protected AbstractCommand setAllowConsole(boolean allowConsole) {
 		this.allowConsole = allowConsole;
 		
 		return this;
@@ -164,16 +118,16 @@ public abstract class Command {
 		return consoleDisallowedMessage;
 	}
 	
-	protected Command setConsoleDisallowedMessage(String consoleDisallowedMessage) {
+	protected AbstractCommand setConsoleDisallowedMessage(String consoleDisallowedMessage) {
 		this.consoleDisallowedMessage = consoleDisallowedMessage;
 		
 		return this;
 	}
 
-	public List<Command> getSubCommands() {
-		ArrayList<Command> commands = new ArrayList<Command>();
+	public List<AbstractCommand> getSubCommands() {
+		ArrayList<AbstractCommand> commands = new ArrayList<AbstractCommand>();
 		
-		for(Command command : Commands.getCommands()) {
+		for(AbstractCommand command : Commands.getCommands()) {
 			if(command.getParent() == this) {
 				commands.add(command);
 			}
@@ -183,7 +137,7 @@ public abstract class Command {
 	}
 	
 	public boolean hasSubCommand() {
-		for(Command command : Commands.getCommands()) {
+		for(AbstractCommand command : Commands.getCommands()) {
 			if(command.getParent() == this) {
 				return true;
 			}
@@ -192,7 +146,7 @@ public abstract class Command {
 		return false;
 	}
 	
-	public boolean isSubCommand(Command command) {
+	public boolean isSubCommand(AbstractCommand command) {
 		return command.getParent() == this;
 	}
 
@@ -200,7 +154,7 @@ public abstract class Command {
 		return this.getParent() != null;
 	}
 	
-	public boolean isParentCommand(Command command) {
+	public boolean isParentCommand(AbstractCommand command) {
 		return this.getParent() == command;
 	}
 	
@@ -210,4 +164,5 @@ public abstract class Command {
 	
 	public abstract void onCommand(String[] labels, CommandSender sender, String[] args);
 	public abstract List<String> onTabComplete();
+
 }
